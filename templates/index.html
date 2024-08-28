@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Flask App</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+</head>
+<body>
+    <h1>MongoDB Flask App</h1>
+    <div class="content">
+        <form method="post">
+            <p>
+                <label for="content">Todo Content</label>
+            </p>
+            <p>
+                <input type="text" name="content" placeholder="add todo...">
+            </p>
+            
+        </form>
+    </div>
+</body>
+</html>
