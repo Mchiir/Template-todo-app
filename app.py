@@ -15,5 +15,6 @@ db = client.flask_database
 # This is a todos collection
 todos = db.todos
 
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 if __name__ == "__main__":
     app.run(debug=True)
