@@ -69,3 +69,7 @@ button:hover{
 .todo p{
     margin: 0;
 }
+
+.todo i {
+    color: #888;
+}

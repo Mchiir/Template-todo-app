@@ -1,20 +1,50 @@
 from flask import Flask, render_template, url_for, request, redirect
+from bson.objectid import ObjectId
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 app = Flask(__name__)
 
-client = MongoClient('localhost', 27017)
+try:
+    myclient = MongoClient('mongodb://localhost:27017/')
+    mydb = myclient["flask_database"]
+
+    # Connection attempt
+    mydb.list_collection_names()
+    print("MongoDB Connected")
+
+    # Check if the database exists
+    dblist = myclient.list_database_names()
+    if "flask_database" in dblist:
+        print("The database exists.")
+
+except ConnectionFailure as e:
+    print(f"Connection failed: {e}")
+
+myCollection = mydb["todos"]
+
+collectionList = mydb.list_collection_names()
+if "todos" in collectionList:
+    print("The collection exists also.")
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    if request.method == 'POST':
+        content = request.form.get('content')
+        degree = request.form.get('degree')
+        if content and degree:
+            myCollection.insert_one({'content': content, 'degree': degree})
+            return redirect(url_for('index'))  # Redirect after submission
 
-# This is a mongodb database
-db = client.flask_database
+    all_todos = myCollection.find()  # Fetch todos every time index is called
+    return render_template('index.html', todos=all_todos)
 
-# This is a todos collection
-todos = db.todos
 
-app.config['TEMPLATES_AUTO_RELOAD'] = True
+@app.post("/<id>/delete")
+def delete(id):
+    myCollection.delete_one({"_id": ObjectId(id)})
+    return redirect(url_for('index'))
+
+# app.config['TEMPLATES_AUTO_RELOAD'] = True
 if __name__ == "__main__":
     app.run(debug=True)
