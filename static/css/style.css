@@ -46,7 +46,7 @@ input[type='radion'] {
     margin-right: 5px;
 }
 
-button {
+#add {
     background-color: green;
     color: white;
     padding: 10px 20px;
@@ -73,3 +73,40 @@ button:hover{
 .todo i {
     color: #888;
 }
+
+#Edit{
+    background-color: #333;
+    margin-left: 10px;
+    padding: 3px 20px;
+    outline: 0;
+    border: none;
+    border-radius: 5px;
+}
+
+#Edit:hover{
+    background-color: #555454;
+}
+
+.form2{
+    justify-content: space-between;
+}
+.times-div{
+    display: flex;
+    justify-content: space-between;
+}
+
+/* #form3{
+    position: absolute;
+    z-index: 3;
+    top: 4.5cm;
+    left: 11cm;
+    width: 7cm;
+    height: 7cm;
+    padding: 30px;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 70px rgba(0,0,0, 0.1);
+} */

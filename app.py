@@ -45,6 +45,15 @@ def delete(id):
     myCollection.delete_one({"_id": ObjectId(id)})
     return redirect(url_for('index'))
 
+# New route to handle editing a todo
+@app.route("/<id>/edit", methods=['POST'])
+def edit(id):
+    content = request.form.get('content')
+    degree = request.form.get('degree')
+    if content and degree:
+        myCollection.update_one({"_id": ObjectId(id)}, {"$set": {'content': content, 'degree': degree}})
+    return redirect(url_for('index'))
+
 # app.config['TEMPLATES_AUTO_RELOAD'] = True
 if __name__ == "__main__":
     app.run(debug=True)
