@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, flash
 from bson.objectid import ObjectId
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
@@ -50,8 +50,17 @@ def delete(id):
 def edit(id):
     content = request.form.get('content')
     degree = request.form.get('degree')
+    
     if content and degree:
-        myCollection.update_one({"_id": ObjectId(id)}, {"$set": {'content': content, 'degree': degree}})
+        result = myCollection.update_one({"_id": ObjectId(id)}, {"$set": {'content': content, 'degree': degree}})
+        if result.matched_count == 0:
+            # Handle case where no document was found
+            flash('Todo not found', 'error')
+        else:
+            flash('Todo updated successfully', 'success')
+    else:
+        flash('Content and degree are required', 'error')
+    
     return redirect(url_for('index'))
 
 # app.config['TEMPLATES_AUTO_RELOAD'] = True

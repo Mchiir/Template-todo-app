@@ -95,6 +95,44 @@ button:hover{
     justify-content: space-between;
 }
 
+.edit-buttons button:first-child{
+    background-color: #0fe700;
+    color: white;
+    margin-left: 10px;
+    padding: 3px 20px;
+    outline: 0;
+    border: none;
+    border-radius: 5px;
+}
+.edit-buttons button:first-child:hover{
+    background-color: #5bf350;
+}
+.edit-buttons button{
+    background-color: #7e7a7a;
+    margin-left: 10px;
+    padding: 3px 20px;
+    outline: 0;
+    border: none;
+    border-radius: 5px;
+}
+
+.edit-buttons button:hover{
+    background-color: #a5a3a3;
+}
+
+.delete-btn{
+    border-radius: 5px;
+    background-color: rgb(248, 45, 45);
+    color: white;
+    outline: 0;
+    padding: 3px 5px 3px 5px;
+    border: 1px solid rgba(0,0,0, 0.5);
+}
+
+.delete-btn:hover{
+    background-color: rgb(246, 72, 72);
+}
+
 /* #form3{
     position: absolute;
     z-index: 3;

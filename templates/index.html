@@ -1,98 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MongoDB Flask App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
     <style>
-        /* Hide the form initially */
-        .form3 {
-            display: none;
-            position: fixed; /* or absolute */
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            background-color: white;
-            box-shadow: 0 0 50px rgba(0,0,0, 0.2);
-            padding: 20px 20px 2.5cm 20px;
-            z-index: 1000; /* Ensure it appears above other elements */
-            border-radius: 10px;
-        }
+      /* Hide the form initially */
+      .form3 {
+        display: none;
+        position: fixed; /* or absolute */
+        top: 20%;
+        left: 20%;
+        width: 60%;
+        background-color: white;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
+        padding: 20px 20px 2.5cm 20px;
+        z-index: 1000; /* Ensure it appears above other elements */
+        border-radius: 10px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>MongoDB Flask App</h1>
     <div class="content">
-        <form method="post">
-            <p>
-                <label for="content">Todo Content</label>
-            </p>
-            <p>
-                <input type="text" name="content" placeholder="add todo..." required />
-            </p>
-            <p>
-                <b><label for="degree">Degree</label></b>
-            </p>
-            <p>
-                <input id="degree-0" name="degree" required type="radio" value="important" />
-                <label for="degree-0">Important</label>
-            </p>
-            <p>
-                <input id="degree-1" name="degree" required type="radio" value="unimportant" />
-                <label for="degree-1">Unimportant</label>
-            </p>
-            <button type="submit" id="add">Send</button>
+      <form method="post">
+        <p>
+          <label for="content">Todo Content</label>
+        </p>
+        <p>
+          <input
+            type="text"
+            name="content"
+            placeholder="add todo..."
+            required
+          />
+        </p>
+        <p>
+          <b><label for="degree">Degree</label></b>
+        </p>
+        <p>
+          <input
+            id="degree-0"
+            name="degree"
+            required
+            type="radio"
+            value="important"
+          />
+          <label for="degree-0">Important</label>
+        </p>
+        <p>
+          <input
+            id="degree-1"
+            name="degree"
+            required
+            type="radio"
+            value="unimportant"
+          />
+          <label for="degree-1">Unimportant</label>
+        </p>
+        <button type="submit" id="add">Send</button>
+      </form>
+      <hr />
+      {% for todo in todos %}
+      <div class="todo">
+        <p>{{ todo['content'] }} <i>{{ todo['degree'] }}</i></p>
+        <form
+          method="POST"
+          action="{{ url_for('delete', id=todo['_id']) }}"
+          class="form2"
+        >
+          <input
+            type="submit"
+            value="Delete Todo"
+            class="delete-btn"
+            onclick="return confirm('Are you sure you want to delete this entry?')"
+          />
+          <button
+            type="button"
+            onclick="editTodo('{{ todo['_id'] }}', '{{ todo['content'] }}', '{{ todo['degree'] }}')"
+            id="Edit"
+          >
+            Edit
+          </button>
         </form>
-        <hr>
-        {% for todo in todos %}
-        <div class="todo">
-            <p>{{ todo['content'] }} <i>{{ todo['degree'] }}</i></p>
-            <form method="POST" action="{{ url_for('delete', id=todo['_id']) }}" class="form2">
-                <input type="submit" value="Delete Todo" onclick="return confirm('Are you sure you want to delete this entry?')" />
-                <button type="button" onclick="editTodo('{{ todo['_id'] }}', '{{ todo['content'] }}', '{{ todo['degree'] }}')" id="Edit">Edit</button>
-            </form>
-        </div>
-        {% endfor %}
+      </div>
+      {% endfor %}
     </div>
 
     <!-- Editor Form -->
     <div class="form3" id="editor-form">
-        <form action="" id="form3">
-                <h3>Editor</h3>
-            <input type="hidden" id="todo-id" name="todo-id" value="">
-            <p>
-                <input type="text" id="todo-content" name="content">
-            </p>
-            <p>
-                <input id="degree-0-edit" name="degree" required type="radio" value="important" />
-                <label for="degree-0-edit">Important</label>
-            </p>
-            <p>
-                <input id="degree-1-edit" name="degree" required type="radio" value="unimportant" />
-                <label for="degree-1-edit">Unimportant</label>
-            </p>
+      <form action="" id="form3">
+        <h3>Editor</h3>
+        <input type="hidden" id="todo-id" name="todo-id" value="" />
+        <p>
+          <input type="text" id="todo-content" name="content" />
+        </p>
+        <p>
+          <input
+            id="degree-0-edit"
+            name="degree"
+            required
+            type="radio"
+            value="important"
+          />
+          <label for="degree-0-edit">Important</label>
+        </p>
+        <p>
+          <input
+            id="degree-1-edit"
+            name="degree"
+            required
+            type="radio"
+            value="unimportant"
+          />
+          <label for="degree-1-edit">Unimportant</label>
+        </p>
+        <div class="edit-buttons">
             <button type="submit" id="edit-submit">Save</button>
             <button type="button" onclick="closeEditor()">Cancel</button>
-        </form>
+        </div>
+      </form>
     </div>
 
     <script>
         function editTodo(id, content, degree) {
-            document.getElementById('editor-form').style.display = 'block';
-            document.getElementById('todo-id').value = id;
-            document.getElementById('todo-content').value = content;
-            if (degree === 'important') {
-                document.getElementById('degree-0-edit').checked = true;
-            } else {
-                document.getElementById('degree-1-edit').checked = true;
-            }
-        }
+    document.getElementById("editor-form").style.display = "block";
+    document.getElementById("todo-id").value = id;
+    document.getElementById("todo-content").value = content;
+    if (degree === "important") {
+      document.getElementById("degree-0-edit").checked = true;
+    } else {
+      document.getElementById("degree-1-edit").checked = true;
+    }
+  }
 
-        function closeEditor() {
-            document.getElementById('editor-form').style.display = 'none';
-        }
-        document.getElementById('close-editor').addEventListener('click', closeEditor())
+  function closeEditor() {
+    document.getElementById("editor-form").style.display = "none";
+  }
+  document
+    .getElementById("close-editor")
+    .addEventListener("click", closeEditor());
     </script>
-</body>
+  </body>
 </html>
