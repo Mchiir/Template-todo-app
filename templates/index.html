@@ -136,13 +136,14 @@
     } else {
       document.getElementById("degree-1-edit").checked = true;
     }
+    console.log(degree, content)
   }
 
   function closeEditor() {
     document.getElementById("editor-form").style.display = "none";
   }
   document
-    .getElementById("close-editor")
+    .getElementById("edit-submit")
     .addEventListener("click", closeEditor());
     </script>
   </body>
